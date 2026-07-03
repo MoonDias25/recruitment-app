@@ -1,0 +1,132 @@
+// Definim câteva variabile de culoare pentru consistență (opțional, le poți schimba cu paleta proiectului tău)
+$primary-color: #3b82f6;       // Albastru modern
+$primary-hover: #2563eb;       // Albastru mai închis pentru hover
+$text-dark: #1f2937;           // Gri închis pentru text principal
+$text-muted: #6b7280;          // Gri deschis pentru text secundar
+$bg-success: #dcfce7;          // Fundal verde deschis pentru succes
+$text-success: #15803d;        // Text verde pentru succes
+$bg-danger: #fee2e2;           // Fundal roșu deschis pentru eroare
+$text-danger: #b91c1c;         // Text roșu pentru eroare
+
+.apply-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: $text-dark;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .job-info {
+    color: $text-muted;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+
+    strong {
+      color: $text-dark;
+    }
+  }
+
+  // Stilurile pentru mesajele de alertă (@if din HTML)
+  .alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    &.alert-danger {
+      background-color: $bg-danger;
+      color: $text-danger;
+      border: 1px solid rgba($text-danger, 0.2);
+    }
+
+    &.alert-success {
+      background-color: $bg-success;
+      color: $text-success;
+      border: 1px solid rgba($text-success, 0.2);
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $text-dark;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    // Stilzarea inputului de tip file ca să nu arate cel nativ din browser
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      padding: 0.5rem;
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      background-color: #f8fafc;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+
+      &:hover {
+        border-color: $primary-color;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .file-info {
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: $text-muted;
+
+    strong {
+      color: $primary-color;
+    }
+  }
+
+  // Butonul de submit
+  .btn-submit {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover:not([disabled]) {
+      background-color: $primary-hover;
+    }
+
+    &:active:not([disabled]) {
+      transform: scale(0.98); // Efect mic de apăsare la click
+    }
+
+    // Stilul când butonul este blocat (până încarcă fișierul)
+    &:disabled {
+      background-color: #9ca3af;
+      color: #e5e7eb;
+      cursor: not-allowed;
+    }
+  }
+}

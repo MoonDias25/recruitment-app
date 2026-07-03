@@ -1,0 +1,40 @@
+<div class="apply-container">
+  <h2>Apply for Job</h2>
+  <p class="job-info">You are applying for: <strong>{{ jobTitle() }}</strong></p>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <form (ngSubmit)="onSubmit()" #applyForm="ngForm">
+    
+    <div class="form-group">
+      <label for="cvFile">Upload your CV (PDF or Word):</label>
+      <input 
+        type="file" 
+        id="cvFile" 
+        (change)="onFileSelected($event)" 
+        accept=".pdf,.doc,.docx" 
+        required
+      >
+    </div>
+
+    @if (selectedFile()) {
+      <div class="file-info">
+        Selected file: <strong>{{ selectedFile()?.name }}</strong>
+      </div>
+    }
+
+    <button type="submit" [disabled]="!selectedFile() || isSubmitting()" class="btn-submit">
+      {{ isSubmitting() ? 'Sending...' : 'Submit Application' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,78 @@
+// Variabile pentru temă
+$primary-color: #2c3e50;
+$border-color: #e2e8f0;
+$text-muted: #64748b;
+
+// Culori Badges
+$color-admin: #ef4444; // Roșu
+$color-hr: #3b82f6;    // Albastru
+$color-user: #10b981;  // Verde
+
+.profile-card {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid $border-color;
+
+  h2 {
+    color: $primary-color;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+  }
+
+  .divider {
+    border: 0;
+    height: 1px;
+    background: $border-color;
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-details {
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #1e293b;
+
+      strong {
+        color: $primary-color;
+        display: inline-block;
+        width: 120px; // Aliniază etichetele frumos pe verticală
+      }
+    }
+  }
+
+  .badge {
+    inline-size: max-content;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    text-transform: uppercase;
+
+    &.badge-admin {
+      background-color: lighten($color-admin, 40%);
+      color: $color-admin;
+    }
+
+    &.badge-hr {
+      background-color: lighten($color-hr, 35%);
+      color: $color-hr;
+    }
+
+    &.badge-user {
+      background-color: lighten($color-user, 40%);
+      color: $color-user;
+    }
+  }
+}
+
+.loading-container {
+  text-align: center;
+  margin-top: 3rem;
+  color: $text-muted;
+  font-style: italic;
+}

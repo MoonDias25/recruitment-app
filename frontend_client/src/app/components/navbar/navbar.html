@@ -1,0 +1,39 @@
+<nav class="navbar">
+  <div class="nav-brand">
+    <a routerLink="/job-offers">JobPortal</a>
+  </div>
+
+  <ul class="nav-links">
+    <li><a routerLink="/job-offers" routerLinkActive="active">Job Offers</a></li>
+    
+    @if (authService.isLoggedIn()) {
+      
+      @if (authService.isHR()) {
+        <li><a routerLink="/add-job-offer" routerLinkActive="active">Post a Job</a></li>
+        <li><a routerLink="/promotion-request" routerLinkActive="active">Request Promotion</a></li>
+      }
+      
+      <li><a routerLink="/profile" routerLinkActive="active">Your Profile</a></li>
+    }
+  </ul>
+
+  <div class="nav-actions">
+    @if (!authService.isLoggedIn()) {
+      <button class="btn btn-login" (click)="authService.login()">Log In</button>
+      <a class="btn btn-register" routerLink="/register">Register</a>
+    } @else {
+      @if (authService.isAdmin() || authService.isSuperAdmin()) {
+        <div class="notification-bell" (click)="navigateToAdminPromotions()" style="cursor: pointer;">
+          <span class="bell-icon">🔔</span>
+          @if (promotionService.pendingRequestsCount() > 0) {
+            <span class="badge">{{ promotionService.pendingRequestsCount() }}</span>
+          }
+        </div>
+        <a href="javascript:void(0)"
+        (click)="navigateToUserList()">Manage Users</a>
+      }
+
+      <button class="btn btn-logout" (click)="authService.logout()">Log Out</button>
+    }
+  </div>
+</nav>

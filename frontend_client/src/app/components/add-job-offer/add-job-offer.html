@@ -1,0 +1,118 @@
+<div class="form-container">
+  <h2>Post a New Job Offer</h2>
+
+  @if (errorMessage) {
+    <div class="alert-error">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="jobTitle">Job Title</label>
+      <input 
+        id="jobTitle" 
+        type="text" 
+        formControlName="jobTitle" 
+        placeholder="e.g. Senior Java Developer"
+      />
+      @if (jobForm.get('jobTitle')?.touched && jobForm.get('jobTitle')?.invalid) {
+        <div class="error-text">
+          @if (jobForm.get('jobTitle')?.errors?.['required']) {
+            <span>Job title is required.</span>
+          }
+          @if (jobForm.get('jobTitle')?.errors?.['minlength']) {
+            <span>Title must be at least 3 characters.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="description">Job Description</label>
+      <textarea 
+        id="description" 
+        formControlName="description" 
+        rows="5" 
+        placeholder="Describe the roles, responsibilities, and benefits..."
+      ></textarea>
+      @if (jobForm.get('description')?.touched && jobForm.get('description')?.invalid) {
+        <div class="error-text">
+          @if (jobForm.get('description')?.errors?.['required']) {
+            <span>Description is required.</span>
+          }
+          @if (jobForm.get('description')?.errors?.['minlength']) {
+            <span>Description must be at least 10 characters long.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="salary-section">
+      <div class="form-group inline-group">
+        <label for="minSalary">Minimum Salary (RON)</label>
+        <input 
+          id="minSalary" 
+          type="number" 
+          formControlName="minSalary" 
+          placeholder="Min 2000"
+        />
+        @if (jobForm.get('minSalary')?.touched && jobForm.get('minSalary')?.invalid) {
+          <div class="error-text">
+            @if (jobForm.get('minSalary')?.errors?.['required']) {
+              <span>Minimum salary is required.</span>
+            }
+            @if (jobForm.get('minSalary')?.errors?.['min']) {
+              <span>Salary cannot be less than 2000 RON.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group inline-group">
+        <label for="maxSalary">Maximum Salary (RON)</label>
+        <input 
+          id="maxSalary" 
+          type="number" 
+          formControlName="maxSalary" 
+          placeholder="e.g. 8000"
+        />
+        @if (jobForm.get('maxSalary')?.touched && jobForm.get('maxSalary')?.invalid) {
+          <div class="error-text">
+            @if (jobForm.get('maxSalary')?.errors?.['required']) {
+              <span>Maximum salary is required.</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (jobForm.touched && jobForm.errors?.['salaryInvalid']) {
+      <div class="error-text global-error">
+        Maximum salary cannot be lower than minimum salary.
+      </div>
+    }
+
+    <div class="form-group">
+      <label for="applicationEndDate">Application Deadline</label>
+      <input 
+        id="applicationEndDate" 
+        type="datetime-local" 
+        formControlName="applicationEndDate" 
+      />
+      @if (jobForm.get('applicationEndDate')?.touched && jobForm.get('applicationEndDate')?.invalid) {
+        <div class="error-text">
+          @if (jobForm.get('applicationEndDate')?.errors?.['required']) {
+            <span>Please select an end date for applications.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <button type="submit" class="btn-submit">
+      Publish Job Offer
+    </button>
+
+  </form>
+</div>

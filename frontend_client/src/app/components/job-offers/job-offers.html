@@ -1,0 +1,102 @@
+<div class="jobs-container">
+  <h2>Available Job Offers</h2>
+
+  <div class="filter-container" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+    <label for="searchTitle" style="font-weight: 500;">Search by Title:</label>
+    <input 
+      id="searchTitle"
+      type="text" 
+      [formControl]="searchControl" 
+      placeholder="Type job title..." 
+      style="padding: 8px 12px; width: 300px; border: 1px solid #ccc; border-radius: 4px;"
+    />
+  </div>
+
+  <div class="table-responsive">
+    <table class="jobs-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;"></th>
+          <th style="width: 30%;">Job Title</th>
+          <th style="width: 20%;">Salary Range</th>
+          <th style="width: 25%;">Description</th>
+          <th style="width: 12%;">Application Deadline</th>
+          <th style="width: 8%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (job of jobOffers(); track job.id) {
+          <tr [class.expanded-row-active]="expandedJobId() === job.id">
+            <td>
+              <button (click)="toggleDescription(job.id)" class="btn-toggle" style="cursor: pointer;">
+                {{ expandedJobId() === job.id ? '▼' : '▶' }}
+              </button>
+            </td>
+            <td class="job-title">{{ job.jobTitle }}</td>
+            <td>
+              @if (job.minSalary || job.maxSalary) {
+                {{ job.minSalary }} - {{ job.maxSalary }} RON
+              } @else {
+                <span class="text-muted">Not specified</span>
+              }
+            </td>
+            <td class="job-desc">
+              {{ job.description | slice:0:40 }}{{ (job.description?.length ?? 0) > 40 ? '...' : '' }}
+            </td>
+            <td>
+              {{ job.applicationEndDate | date:'dd MMM yyyy' }}
+            </td>
+            <td>
+              <button (click)="handleApply(job.id)" class="btn-apply" style="cursor: pointer; border: none;">
+                Apply Now
+              </button>
+            </td>
+          </tr>
+
+          @if (expandedJobId() === job.id) {
+            <tr class="description-dropdown-row">
+              <td colspan="6" class="full-description-box">
+                <div class="dropdown-content animate-fade-in">
+                  <strong>Full Job Description:</strong>
+                  <p class="full-text">{{ job.description }}</p>
+                </div>
+              </td>
+            </tr>
+          }
+        } @empty {
+          <tr>
+            <td colspan="6" class="no-jobs" style="text-align: center; padding: 20px;">
+              No job offers match your search criteria.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPages() > 1) {
+    <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+      
+      <button 
+        (click)="goToPreviousPage()" 
+        [disabled]="currentPage() === 0"
+        class="btn-pagination"
+        style="cursor: pointer; padding: 8px 16px;">
+        ◀ Previous
+      </button>
+
+      <span class="page-info">
+        Page <strong>{{ currentPage() + 1 }}</strong> of <strong>{{ totalPages() }}</strong>
+      </span>
+
+      <button 
+        (click)="goToNextPage()" 
+        [disabled]="currentPage() === totalPages() - 1"
+        class="btn-pagination"
+        style="cursor: pointer; padding: 8px 16px;">
+        Next ▶
+      </button>
+
+    </div>
+  }
+</div>

@@ -1,0 +1,89 @@
+<div class="profile-dashboard text-start w-100 px-0">
+  
+  <div class="d-flex align-items-center mb-4 text-start">
+    <h3 class="section-title m-0 fw-bold">My Job Applications History</h3>
+  </div>
+
+  @if (isLoading()) {
+    <div class="d-flex flex-column align-items-start py-5 text-start">
+      <div class="spinner-border text-secondary mb-3" role="status"></div>
+      <p class="text-muted small">Loading your application history...</p>
+    </div>
+  } @else {
+    
+    @if (applications().length === 0) {
+      <div class="empty-state py-4 text-start text-muted">
+        <h5 class="fw-semibold text-dark mb-1">No Applications Found</h5>
+        <p class="small mb-0">You haven't submitted any job applications yet.</p>
+      </div>
+    } @else {
+      
+      <div class="table-responsive w-100">
+        <table class="table align-middle custom-dashboard-table mb-0 w-100 text-start">
+          <thead>
+            <tr>
+              <th scope="col" class="text-uppercase ps-0">Position / Job Title</th>
+              <th scope="col" class="text-uppercase">Job Description</th>
+              <th scope="col" class="text-uppercase">Date Applied</th>
+              <th scope="col" class="text-uppercase">Status</th>
+              <th scope="col" class="text-uppercase">Submitted CV</th>
+              <th scope="col" class="text-uppercase pe-0">Recruiter Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (app of applications(); track app.id) {
+              <tr>
+                <td class="ps-0 text-start">
+                  <span class="job-title-text text-dark fw-bold d-block">{{ app.jobTitle }}</span>
+                </td>
+
+                <td class="text-start text-secondary fs-sm">
+                  <div class="text-truncate" style="max-width: 300px;" [title]="app.jobDescription">
+                    {{ app.jobDescription || 'No description available' }}
+                  </div>
+                </td>
+                
+                <td class="text-start text-secondary fw-medium fs-sm">
+                  {{ app.appliedAt | date:'dd MMM yyyy' }}
+                  <span class="text-muted d-block fs-xs mt-0.5">{{ app.appliedAt | date:'HH:mm' }}</span>
+                </td>
+                
+                <td class="text-start">
+                  <span class="badge-status-pill rounded-pill px-2.5 py-1.5 fw-bold text-uppercase fs-xs" 
+                        [ngClass]="{
+                          'status-pending': app.status === 'PENDING',
+                          'status-accepted': app.status === 'ACCEPTED',
+                          'status-rejected': app.status === 'REJECTED',
+                          'status-reviewed': app.status === 'REVIEWED'
+                        }">
+                    <span class="dot-indicator me-1.5"></span>
+                    {{ app.status }}
+                  </span>
+                </td>
+                
+                <td class="text-start">
+                  @if (app.cvFileName && app.cvFileName !== 'No CV') {
+                    <button class="btn-text-download" 
+                            (click)="downloadCandidateCv(app.id, app.cvFileName)"
+                            [title]="app.cvFileName">
+                      <span class="file-text">{{ app.cvFileName }}</span>
+                    </button>
+                  } @else {
+                    <span class="text-muted fs-sm">No file attached</span>
+                  }
+                </td>
+                
+                <td class="pe-0 text-start">
+                  <div class="notes-text fs-sm" [class.no-notes]="!app.recruiterNotes">
+                    {{ app.recruiterNotes || 'Your application is currently under review.' }}
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    }
+  }
+</div>

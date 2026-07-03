@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Promotion Requests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">AuthServer Admin</a>
+        <div class="ms-auto">
+            <a href="http://localhost/job-offers" class="btn btn-outline-light btn-sm">
+                ← Back to JobPortal
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Pending Promotion Requests</h2>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div th:if="${#lists.isEmpty(requests)}" class="text-center text-muted py-4">
+                No pending promotion requests at the moment.
+            </div>
+
+            <table th:if="${!#lists.isEmpty(requests)}" class="table table-striped table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>HR Notes</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                <tr th:each="req : ${requests}">
+                    <td th:text="${req.userFirstName + ' ' + req.userLastName}">John Doe</td>
+
+                    <td th:text="${req.userEmail}">john.doe@example.com</td>
+
+                    <td><span class="badge bg-secondary" th:text="${req.userRole}">ROLE_USER</span></td>
+
+                    <td th:text="${req.hrNotes}">Recommended for HR role</td>
+
+                    <td>
+                        <form th:action="@{/admin/promotions/decision}" method="post" class="d-flex align-items-center gap-2">
+                            <input type="hidden" name="requestId" th:value="${req.id}" />
+                            <input type="text" name="adminNotes" class="form-control form-control-sm" placeholder="Optional notes..." style="width: 150px;" />
+                            <button type="submit" name="status" value="APPROVED" class="btn btn-sm btn-success">
+                                Approve
+                            </button>
+                            <button type="submit" name="status" value="REJECTED" class="btn btn-sm btn-danger">
+                                Reject
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

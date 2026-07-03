@@ -1,0 +1,46 @@
+<div class="container-fluid px-4 py-4">
+  
+  @if (userProfileInfo) {
+    <div class="row text-start justify-content-start mb-4">
+      <div class="col-12 col-lg-8 text-start ps-0">
+        <div class="profile-header-section mb-4 text-start">
+          <h2 class="fw-bold text-dark mb-4">Profilul Meu</h2>
+          
+          <div class="profile-data-list text-start">
+            <div class="mb-2"><strong>First Name: </strong> <span class="text-secondary ms-1">{{ userProfileInfo.given_name }}</span></div>
+            <div class="mb-2"><strong>Last Name: </strong> <span class="text-secondary ms-1">{{ userProfileInfo.family_name }}</span></div>
+            <div class="mb-2"><strong>Email: </strong> <span class="text-secondary ms-1">{{ userProfileInfo.email }}</span></div>
+            <div class="mb-3"><strong>Phone: </strong> <span class="text-secondary ms-1">{{ userProfileInfo.phone_number || 'Not provided' }}</span></div>
+          </div>
+        </div>
+        
+        <hr class="my-4 border-light-subtle">
+      </div>
+    </div>
+
+    <div class="row text-start justify-content-start">
+      <div class="col-12 ps-0">
+        
+        @if (authService.isUser()) {
+          <div class="w-100 text-start">
+            <app-user-profile [info]="userProfileInfo"></app-user-profile>
+          </div>
+        }
+        
+        @if (authService.isHR()) { 
+          <div class="w-100 text-start">
+            <app-hr-profile [info]="userProfileInfo"></app-hr-profile>
+          </div>
+        }
+        
+        @if (authService.isAdmin() || authService.isSuperAdmin()) { 
+          <div class="w-100 text-start">
+            <app-admin-profile></app-admin-profile>
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+
+</div>

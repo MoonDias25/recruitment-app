@@ -1,0 +1,248 @@
+<div class="admin-profile-container">
+  <div class="profile-header">
+    <h2>Admin Dashboard</h2>
+    <p>Manage all system job offers and candidate applications.</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <span>Loading job offers...</span>
+    </div>
+  }
+
+  @if (!isLoading() && jobOffers().length === 0) {
+    <div class="empty-state">
+      No job offers available in the system.
+    </div>
+  }
+
+  @if (!isLoading() && jobOffers().length > 0) {
+    <div class="table-responsive">
+      <table class="job-offers-table">
+        <thead>
+          <tr>
+            <th class="col-arrow"></th>
+            <th class="col-title">Job Title</th>
+            <th class="col-salary">Salary Range</th>
+            <th class="col-dates">Application Period</th>
+            <th class="col-status">Status</th>
+            <th class="col-reviewer">Reviewer</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          @for (job of jobOffers(); track job.id) {
+            <tr class="job-main-row" [class.is-expanded]="expandedJobId() === job.id">
+              
+              <td class="col-arrow" (click)="toggleExpand(job.id)">
+                <button class="btn-toggle" title="Toggle Applications">
+                  <span class="arrow-icon" [class.rotated]="expandedJobId() === job.id">▶</span>
+                </button>
+              </td>
+              
+              <td class="col-title">
+                @if (editingJobId() === job.id) {
+                  <input type="text" [(ngModel)]="job.jobTitle" class="edit-input" maxlength="50" />
+                } @else {
+                  <strong class="job-title-text">{{ job.jobTitle }}</strong>
+                  @if (expandedJobId() !== job.id) {
+                    <p class="short-description">
+                      {{ job.description | slice:0:80 }}{{ job.description.length > 80 ? '...' : '' }}
+                    </p>
+                  }
+                }
+              </td>
+
+              <td class="col-salary">
+                @if (editingJobId() === job.id) {
+                  <div class="salary-inputs">
+                    <input type="number" [(ngModel)]="job.minSalary" class="edit-input-sm" min="0" />
+                    <span>-</span> 
+                    <input type="number" [(ngModel)]="job.maxSalary" class="edit-input-sm" min="0" />
+                  </div>
+                  @if (job.maxSalary < job.minSalary) {
+                    <span class="error-text">Max must be &ge; Min</span>
+                  }
+                } @else {
+                  <span class="salary-text">{{ job.minSalary }} - {{ job.maxSalary }} <span>RON</span></span>
+                }
+              </td>
+
+              <td class="col-dates">
+                @if (editingJobId() === job.id) {
+                  <input type="datetime-local" [(ngModel)]="job.applicationStartDate" class="edit-input" />
+                  <input type="datetime-local" [(ngModel)]="job.applicationEndDate" class="edit-input mt-1" />
+                  @if (job.applicationEndDate < job.applicationStartDate) {
+                    <span class="error-text">End date must be after start</span>
+                  }
+                } @else {
+                  <div class="date-text">
+                    <small>From: {{ job.applicationStartDate | date:'dd.MM.yyyy' }}</small>
+                    <small>To: {{ job.applicationEndDate | date:'dd.MM.yyyy' }}</small>
+                  </div>
+                }
+              </td>
+
+              <td class="col-status">
+                @if (editingJobId() === job.id) {
+                  <select [(ngModel)]="job.jobStatus" class="status-select">
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                  </select>
+                } @else {
+                  <span class="status-badge" [ngClass]="job.jobStatus.toLowerCase()">
+                    {{ job.jobStatus }}
+                  </span>
+                }
+              </td>
+
+              <td class="col-reviewer">
+                @if (editingJobId() === job.id) {
+                  <input type="email" [(ngModel)]="job.reviewedBy" placeholder="HR Email" class="edit-input" />
+                } @else {
+                  <span class="reviewer-text">{{ job.reviewedBy ? job.reviewedBy : 'Unassigned' }}</span>
+                }
+              </td>
+
+              <td class="col-actions">
+                @if (editingJobId() === job.id) {
+                  <div class="action-buttons-vertical">
+                    <button 
+                      (click)="saveJobOffer(job)" 
+                      class="btn-save"
+                      [disabled]="job.maxSalary < job.minSalary || job.applicationEndDate < job.applicationStartDate"
+                      title="Save changes">
+                      ✔ Save
+                    </button>
+                    <button (click)="cancelEdit()" class="btn-cancel" title="Cancel edit">✖ Cancel</button>
+                  </div>
+                } @else {
+                  <div class="action-buttons">
+                    <button (click)="startEdit(job.id)" class="btn-edit" title="Edit offer">✏️</button>
+                    <button (click)="deleteJobOffer(job.id)" class="btn-delete" title="Delete offer">🗑️</button>
+                  </div>
+                }
+              </td>
+
+            </tr>
+
+            @if (expandedJobId() === job.id) {
+              <tr class="job-details-row">
+                <td colspan="7">
+                  <div class="details-content">
+                    
+                    <div class="full-description">
+                      <h5>Full Description</h5>
+                      @if (editingJobId() === job.id) {
+                        <textarea [(ngModel)]="job.description" rows="4" class="edit-textarea" maxlength="2000"></textarea>
+                      } @else {
+                        <p class="desc-p">{{ job.description }}</p>
+                      }
+                    </div>
+
+                    <div class="applicants-section">
+                      <h5 class="section-title">Applied Candidates ({{ applicationsMap()[job.id]?.length || 0 }})</h5>
+
+                      @if (!applicationsMap()[job.id]) {
+                        <p class="loading-text"><em>Loading applicants...</em></p>
+                      }
+
+                      @if (applicationsMap()[job.id] && applicationsMap()[job.id].length === 0) {
+                        <div class="no-applicants-box">
+                          No candidates have applied for this job yet.
+                        </div>
+                      }
+
+                      @if (applicationsMap()[job.id] && applicationsMap()[job.id].length > 0) {
+                        <div class="applicants-table-wrapper">
+                          <table class="inner-applicants-table">
+                            <thead>
+                              <tr>
+                                <th>Candidate Details</th>
+                                <th>Applied At</th>
+                                <th>Status</th>
+                                <th>CV / Resume</th>
+                                <th>Recruiter Notes</th>
+                                <th>Review Audit</th>
+                                class="text-center"<th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @for (app of applicationsMap()[job.id]; track app.id) {
+                                <tr class="inner-app-row">
+                                  
+                                  <td>
+                                    <strong class="candidate-name">{{ app.firstName }} {{ app.lastName }}</strong>
+                                    <div class="candidate-email">{{ app.email }}</div>
+                                  </td>
+
+                                  <td class="candidate-date">
+                                    {{ app.appliedAt | date:'dd.MM.yyyy HH:mm' }}
+                                  </td>
+
+                                  <td>
+                                    <span class="status-badge-sm" [ngClass]="app.status.toLowerCase()">
+                                      {{ app.status }}
+                                    </span>
+                                  </td>
+
+                                  <td>
+                                    @if (app.cvFileName) {
+                                      <button 
+                                        (click)="downloadCv(app.id, app.cvFileName)" 
+                                        class="btn-download-cv"
+                                        title="Click to download CV">
+                                        📄 {{ app.cvFileName | slice:0:15 }}{{ app.cvFileName.length > 15 ? '...' : '' }}
+                                      </button>
+                                    } @else {
+                                      <span class="no-cv-text">No CV uploaded</span>
+                                    }
+                                  </td>
+
+                                  <td class="notes-cell">
+                                    @if (app.recruiterNotes) {
+                                      <span class="notes-quote" [title]="app.recruiterNotes">"{{ app.recruiterNotes }}"</span>
+                                    } @else {
+                                      <span class="no-notes-text">No notes</span>
+                                    }
+                                  </td>
+
+                                  <td class="audit-cell">
+                                    @if (app.reviewedBy) {
+                                      <div><strong>By:</strong> {{ app.reviewedBy }}</div>
+                                      @if (app.reviewedAt) {
+                                        <div class="audit-date"><strong>On:</strong> {{ app.reviewedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+                                      }
+                                    } @else {
+                                      <span class="not-reviewed-text">Not reviewed</span>
+                                    }
+                                  </td>
+
+                                  <td class="text-center">
+                                    <button 
+                                      (click)="deleteCandidateApplication(job.id, app.id)" 
+                                      class="btn-delete-app"
+                                      title="Delete this application">
+                                      🗑️ Delete
+                                    </button>
+                                  </td>
+
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      }
+                    </div>
+
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

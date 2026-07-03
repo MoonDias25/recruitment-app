@@ -1,0 +1,17 @@
+<div class="home-container">
+  <div class="welcome-box">
+    
+    @if (registrationSuccessMessage()) {
+        <div class="message success-message" style="color: #2e7d32; background-color: #e8f5e9; padding: 15px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #c8e6c9;">
+            {{ registrationSuccessMessage() }}
+        </div>
+    }
+
+    <h1>Welcome to the Recruitment Platform!</h1>
+    <p>Please log in.</p>
+    
+    <div class="dashboard-actions">
+      <button class="action-btn" (click)="redirectToLogin()">Login</button>
+    </div>
+  </div>
+</div>

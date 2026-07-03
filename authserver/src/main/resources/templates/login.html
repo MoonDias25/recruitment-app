@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In to Recruitment System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 { color: #1f2937; margin-bottom: 1.5rem; text-align: center; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #4b5563; font-weight: 500; }
+        input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #3b82f6; }
+        button { width: 100%; padding: 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #2563eb; }
+        .error-message { color: #dc2626; background: #fee2e2; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; text-align: center; }
+
+        .register-text {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        .register-text a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-text a:hover {
+            text-decoration: underline;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Welcome Back</h2>
+
+    <div class="error-message" th:if="${param.error}">
+        Invalid email or password. Please try again.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label th:for="username">Email Address</label>
+            <input type="email" id="username" name="username" required autofocus/>
+        </div>
+
+        <div class="form-group">
+            <label th:for="password">Password</label>
+            <input type="password" id="password" name="password" required/>
+        </div>
+
+        <button type="submit">Sign In</button>
+
+        <span class="register-text">If you don't have an account, <a th:href="@{http://localhost/register}">create one</a></span>
+    </form>
+</div>
+
+</body>
+</html>

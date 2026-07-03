@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="mb-6">
+        <a th:href="@{/admin/employees}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center gap-1 transition">
+            ← Back to Directory
+        </a>
+    </div>
+
+    <div class="mb-8 border-b border-gray-200 pb-5">
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Edit Profile</h1>
+        <p class="text-sm text-gray-500 mt-1">Modify account details and system authorization roles based on your access level.</p>
+    </div>
+
+    <div class="bg-white shadow sm:rounded-lg border border-gray-200">
+        <form th:action="@{/admin/employees/edit/{id}(id=${user.id})}" th:object="${user}" method="POST" class="space-y-6 p-6 sm:p-8">
+
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                <div>
+                    <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input type="text" th:field="*{firstName}" id="firstName" required class="mt-1 block w-full border border-gray-300 rounded-md py-2 px-3 sm:text-sm" />
+                </div>
+                <div>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input type="text" th:field="*{lastName}" id="lastName" required class="mt-1 block w-full border border-gray-300 rounded-md py-2 px-3 sm:text-sm" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 pt-4 border-t border-gray-100">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" th:field="*{email}" id="email" required class="mt-1 block w-full border border-gray-300 rounded-md py-2 px-3 sm:text-sm" />
+                </div>
+                <div>
+                    <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="text" th:field="*{phoneNumber}" id="phoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md py-2 px-3 sm:text-sm" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 pt-4 border-t border-gray-100">
+                <div>
+                    <label for="roleSelect" class="block text-sm font-medium text-gray-700">Assigned Security Role</label>
+                    <select th:field="*{roleName}" id="roleSelect" class="mt-1 block w-full border border-gray-300 bg-white rounded-md py-2 px-3 sm:text-sm">
+                        <option th:each="role : ${allRoles}" th:value="${role}" th:text="${role}">USER</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Account Status</label>
+                    <div class="flex items-center mt-3">
+                        <input type="checkbox" th:field="*{active}" id="active" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        <label for="active" class="ml-2 block text-sm font-semibold text-gray-900">Account is Active</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-5 border-t border-gray-200 flex justify-end gap-3">
+                <a th:href="@{/admin/employees}" class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">Cancel</a>
+                <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script inline="javascript">
+    const roleSelect = document.getElementById('roleSelect');
+    let previousRole = roleSelect.value;
+
+    roleSelect.addEventListener('change', function(event) {
+        const selectedRole = event.target.value;
+
+        if (selectedRole === 'SUPER_ADMIN') {
+            const confirmed = confirm("⚠️ CRITICAL WARNING: Are you absolutely sure you want to promote this user to SUPER_ADMIN?\n\nThis grants unrevokable root access to all system architectures.");
+
+            if (!confirmed) {
+                roleSelect.value = previousRole;
+                return;
+            }
+        }
+        previousRole = selectedRole;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Consent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .consent-card {
+            max-width: 520px;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        .scope-icon {
+            font-size: 1.25rem;
+            color: #4f46e5;
+            background: #f0fdf4;
+            padding: 8px 11px;
+            border-radius: 50%;
+        }
+        .btn-grant {
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+        }
+        .btn-grant:hover {
+            background-color: #1557b0;
+            border-color: #1557b0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm p-4 consent-card bg-white">
+
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <i class="bi bi-shield-lock-fill text-primary" style="font-size: 2.5rem;"></i>
+            </div>
+            <h4 class="fw-semibold text-dark mb-2">Sign in with your account</h4>
+            <p class="text-muted small">
+                The application <strong class="text-dark" th:text="${clientName}">Client</strong> wants to access your account
+                (<span class="badge bg-secondary-subtle text-secondary-emphasis" th:text="${principalName}">user</span>).
+            </p>
+        </div>
+
+        <form method="post" action="/oauth2/authorize">
+            <input type="hidden" name="state" th:value="${state}"/>
+            <input type="hidden" name="client_id" th:value="${clientId}"/>
+
+            <p class="text-secondary small fw-medium mb-3">This application will have permission to:</p>
+
+            <div class="list-group list-group-flush mb-4 border rounded-3 overflow-hidden">
+
+                <div th:each="scope : ${scopes}">
+                    <input type="hidden" name="scope" th:value="${scope}"/>
+                </div>
+
+                <div th:each="scope : ${scopes}" class="list-group-item d-flex align-items-start p-3 bg-white">
+
+                    <div class="me-3 mt-1">
+                        <i th:class="${scope == 'openid'} ? 'bi bi-person-badge scope-icon' :
+                                     (${scope == 'profile'} ? 'bi bi-person-circle scope-icon' :
+                                     (${scope == 'email'} ? 'bi bi-envelope-fill scope-icon' : 'bi bi-gear-fill scope-icon'))"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <span th:if="${scope == 'openid'}" class="d-block fw-semibold text-dark small">Associated OpenID account</span>
+                        <span th:if="${scope == 'profile'}" class="d-block fw-semibold text-dark small">See your personal info</span>
+                        <span th:if="${scope == 'email'}" class="d-block fw-semibold text-dark small">See your primary email address</span>
+                        <span th:if="${scope != 'openid' and scope != 'profile' and scope != 'email'}" class="d-block fw-semibold text-dark small" th:text="${'Custom permission: ' + scope}">Custom Permission</span>
+
+                        <small th:if="${scope == 'openid'}" class="text-muted d-block" style="font-size: 11px;">Verify your identity on this system.</small>
+                        <small th:if="${scope == 'profile'}" class="text-muted d-block" style="font-size: 11px;">Includes your name, photo, and public profile data.</small>
+                        <small th:if="${scope == 'email'}" class="text-muted d-block" style="font-size: 11px;">View the email address linked to your account.</small>
+                        <small th:if="${scope != 'openid' and scope != 'profile' and scope != 'email'}" class="text-muted d-block" style="font-size: 11px;">Access to standard platform endpoints.</small>
+                    </div>
+
+                    <div class="ms-2">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.15rem;"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="d-flex flex-column gap-2 mt-4">
+                <button class="btn btn-grant text-white py-2 fw-medium shadow-sm" type="submit" name="consent_action" value="approve" id="submit-consent">
+                    Allow access
+                </button>
+                <button class="btn btn-link text-danger text-decoration-none py-2 small fw-medium" type="submit" name="consent_action" value="cancel" id="cancel-consent">
+                    Deny & cancel
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4 pt-3 border-top">
+            <small class="text-muted" style="font-size: 11px;">Before granting access, make sure you trust this app.</small>
+        </div>
+    </div>
+</div>
+</body>
+</html>

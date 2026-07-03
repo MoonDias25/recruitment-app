@@ -1,0 +1,145 @@
+$text-main: #0f172a;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
+$primary-blue: #2563eb;
+$pdf-red: #ef4444;
+
+.profile-dashboard {
+  text-align: left !important;
+
+  .section-title {
+    color: $text-main;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  // TABELĂ PREMIUM - DIMENSIUNI MARI ȘI DETALII CURATE
+  .custom-dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead th {
+      background-color: transparent;
+      color: $text-muted;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding: 1.2rem 0.75rem;
+      border-bottom: 2px solid $border-color;
+      text-align: left !important;
+    }
+
+    tbody td {
+      padding: 1.6rem 0.75rem; // Dimensiune mare pentru rânduri (aerisire maximă)
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      text-align: left !important;
+    }
+
+    tbody tr {
+      transition: background-color 0.15s ease;
+      &:hover {
+        background-color: #f8fafc;
+      }
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    .job-title-text {
+      font-size: 1.05rem;
+      color: $text-main;
+    }
+  }
+
+  // PILLS DE STATUS (CURATE, DISCRETE)
+  .badge-status-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+
+    .dot-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    &.status-pending {
+      background-color: #fffbeb;
+      color: #b45309;
+      .dot-indicator { background-color: #d97706; }
+    }
+
+    &.status-accepted {
+      background-color: #ecfdf5;
+      color: #047857;
+      .dot-indicator { background-color: #059669; }
+    }
+
+    &.status-rejected {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      .dot-indicator { background-color: #dc2626; }
+    }
+
+    &.status-reviewed {
+      background-color: #f0f9ff;
+      color: #0369a1;
+      .dot-indicator { background-color: #0284c7; }
+    }
+  }
+
+  // ==========================================
+  // BUTON DOWNLOAD TEXT-ONLY LINK (MINIMALIST PREMIUM)
+  // ==========================================
+  .btn-text-download {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    text-align: left;
+    display: inline-block;
+    max-width: 180px;
+
+    .file-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2c228a; // Text direct roșu elegant (specific documentelor PDF)
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    &:hover {
+      .file-text {
+        color: #2c228a; // Roșu mai închis la hover
+        border-color: #2730b3; // Subliniere continuă fină
+      }
+    }
+  }
+
+  .notes-text {
+    color: #475569;
+    max-width: 280px;
+    line-height: 1.4;
+
+    &.no-notes {
+      color: $text-muted;
+      font-style: italic;
+    }
+  }
+
+  .empty-state {
+    color: $text-muted;
+  }
+}
+
+// Utilitare font size globale
+.fs-sm { font-size: 0.88rem; }
+.fs-xs { font-size: 0.75rem; }

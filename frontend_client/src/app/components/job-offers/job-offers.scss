@@ -1,0 +1,140 @@
+$primary-color: #3b82f6;
+$primary-hover: #2563eb;
+$text-dark: #1f2937;
+$border-color: #e5e7eb;
+
+.jobs-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    color: $text-dark;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid $border-color;
+  }
+
+  .jobs-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    text-align: left;
+
+    thead {
+      background-color: #f8fafc;
+      border-bottom: 2px solid $border-color;
+
+      th {
+        padding: 1rem;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.95rem;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border-color;
+        transition: background-color 0.2s ease;
+
+        &:nth-child(even) {
+          background-color: #f8fafc;
+        }
+
+        &:hover {
+          background-color: #f1f5f9;
+        }
+      }
+
+      td {
+        padding: 1.25rem 1rem;
+        color: #334155;
+        font-size: 0.95rem;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .job-title {
+    font-weight: 600;
+    color: $text-dark;
+  }
+
+  .job-desc {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .no-jobs {
+    text-align: center;
+    padding: 3rem !important;
+    color: #64748b;
+    font-style: italic;
+  }
+
+  .btn-apply {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: $primary-color;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+  
+  .text-muted {
+    color: #94a3b8;
+  }
+}
+
+.btn-toggle {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #4f46e5;
+  padding: 4px 8px;
+  transition: transform 0.2s;
+}
+
+.description-dropdown-row {
+  background-color: #f9fafb;
+}
+
+.full-description-box {
+  padding: 15px 20px !important;
+  border-left: 4px solid #4f46e5;
+}
+
+.full-text {
+  margin-top: 8px;
+  white-space: pre-line;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.expanded-row-active {
+  background-color: #f3f4f6;
+}
