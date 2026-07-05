@@ -1,4 +1,4 @@
-package com.authserver.server.Repos;
+package com.authserver.server.repos;
 
 import com.authserver.server.entity.Authority;
 import com.authserver.server.entity.User;

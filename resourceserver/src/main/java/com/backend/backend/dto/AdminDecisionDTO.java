@@ -1,6 +1,6 @@
 package com.backend.backend.dto;
 
-import com.backend.backend.PromRequestStatus;
+import com.backend.backend.enums.PromRequestStatus;
 
 public class AdminDecisionDTO {
 

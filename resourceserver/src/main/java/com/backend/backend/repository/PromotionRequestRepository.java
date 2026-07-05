@@ -1,6 +1,6 @@
 package com.backend.backend.repository;
 
-import com.backend.backend.PromRequestStatus;
+import com.backend.backend.enums.PromRequestStatus;
 import com.backend.backend.entity.PromotionRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 

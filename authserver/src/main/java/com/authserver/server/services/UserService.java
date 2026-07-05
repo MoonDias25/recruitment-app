@@ -1,8 +1,8 @@
 package com.authserver.server.services;
 
 import com.authserver.server.Exception;
-import com.authserver.server.Repos.AuthorityRepository;
-import com.authserver.server.Repos.UserRepository;
+import com.authserver.server.repos.AuthorityRepository;
+import com.authserver.server.repos.UserRepository;
 import com.authserver.server.dto.UserEditDto;
 import com.authserver.server.entity.Authority;
 import com.authserver.server.entity.User;

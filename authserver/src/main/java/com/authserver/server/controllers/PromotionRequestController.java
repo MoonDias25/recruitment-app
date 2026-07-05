@@ -1,6 +1,6 @@
 package com.authserver.server.controllers;
 
-import com.authserver.server.PromRequestStatus;
+import com.authserver.server.enums.PromRequestStatus;
 import com.authserver.server.dto.AdminDecisionDTO;
 import com.authserver.server.dto.PromotionRequestDetailDTO;
 import com.authserver.server.services.PromotionRequestService;

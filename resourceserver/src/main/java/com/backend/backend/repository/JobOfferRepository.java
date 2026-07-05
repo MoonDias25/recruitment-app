@@ -1,6 +1,6 @@
 package com.backend.backend.repository;
 
-import com.backend.backend.JobStatus;
+import com.backend.backend.enums.JobStatus;
 import com.backend.backend.entity.JobOffer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

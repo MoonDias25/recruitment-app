@@ -1,4 +1,4 @@
-package com.authserver.server.Repos;
+package com.authserver.server.repos;
 
 import com.authserver.server.entity.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;

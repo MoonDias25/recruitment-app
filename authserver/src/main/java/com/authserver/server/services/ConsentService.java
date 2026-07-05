@@ -1,6 +1,6 @@
 package com.authserver.server.services;
 
-import com.authserver.server.Repos.UserRepository;
+import com.authserver.server.repos.UserRepository;
 import com.authserver.server.dto.UserDuplicationDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.server.authorization.JdbcOAuth2Author
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.stereotype.Service;
 
 public class ConsentService implements OAuth2AuthorizationConsentService {
 

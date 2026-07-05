@@ -1,10 +1,9 @@
 package com.backend.backend.entity;
 
-import com.backend.backend.JobStatus;
+import com.backend.backend.enums.JobStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

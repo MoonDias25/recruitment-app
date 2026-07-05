@@ -1,6 +1,6 @@
 package com.backend.backend.entity;
 
-import com.backend.backend.ApplicationStatus;
+import com.backend.backend.enums.ApplicationStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -41,6 +41,20 @@ public class CandidateApplication {
 
     @Column(name="reviewed_at")
     private LocalDateTime reviewedAt;
+
+
+    public CandidateApplication() {
+    }
+
+    public CandidateApplication(String userId, JobOffer jobOffer, String cvId, LocalDateTime appliedAt,
+                                ApplicationStatus candidateStatus, String reviewedBy) {
+        this.userId = userId;
+        this.jobOffer = jobOffer;
+        this.cvId = cvId;
+        this.appliedAt = appliedAt;
+        this.candidateStatus = candidateStatus;
+        this.reviewedBy = reviewedBy;
+    }
 
     public String getId() {
         return id;

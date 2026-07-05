@@ -1,9 +1,9 @@
 package com.authserver.server.services;
 
-import com.authserver.server.PromRequestStatus;
-import com.authserver.server.Repos.AuthorityRepository;
-import com.authserver.server.Repos.PromotionRequestRepository;
-import com.authserver.server.Repos.UserRepository;
+import com.authserver.server.enums.PromRequestStatus;
+import com.authserver.server.repos.AuthorityRepository;
+import com.authserver.server.repos.PromotionRequestRepository;
+import com.authserver.server.repos.UserRepository;
 import com.authserver.server.dto.AdminDecisionDTO;
 import com.authserver.server.dto.PromotionRequestDetailDTO;
 import com.authserver.server.entity.Authority;

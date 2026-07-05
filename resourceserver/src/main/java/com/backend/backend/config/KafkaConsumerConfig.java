@@ -4,6 +4,7 @@ import com.backend.backend.dto.AdminDecisionDTO;
 import com.backend.backend.dto.UserDuplicationDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -19,11 +20,20 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConsumerConfig {
 
+    @Value("${kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Value("${kafka.groups.business-profile}")
+    private String businessProfileGroupId;
+
+    @Value("${kafka.groups.resource-promotion}")
+    private String resourcePromotionGroupId;
+
     @Bean
     public ConsumerFactory<String, UserDuplicationDTO> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "business-profile-group");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, businessProfileGroupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         JacksonJsonDeserializer<UserDuplicationDTO> jsonDeserializer = new JacksonJsonDeserializer<>(UserDuplicationDTO.class);
@@ -48,8 +58,8 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, AdminDecisionDTO> adminDecisionConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "resource-promotion-group");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, resourcePromotionGroupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         JacksonJsonDeserializer<AdminDecisionDTO> jsonDeserializer = new JacksonJsonDeserializer<>(AdminDecisionDTO.class);
@@ -67,7 +77,7 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, AdminDecisionDTO> adminDecisionKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, AdminDecisionDTO> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(adminDecisionConsumerFactory()); // Îi dăm fabrica creată mai sus
+        factory.setConsumerFactory(adminDecisionConsumerFactory());
         return factory;
     }
 }

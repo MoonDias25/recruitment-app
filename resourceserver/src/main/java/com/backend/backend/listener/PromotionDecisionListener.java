@@ -20,8 +20,6 @@ public class PromotionDecisionListener {
             containerFactory = "adminDecisionKafkaListenerContainerFactory"
     )
     public void consumeAdminDecision(AdminDecisionDTO decision) {
-        System.out.println("Received Admin Decision from Kafka for request: " + decision.getRequestId());
-
         promotionRequestService.updateRequestStatusFromKafka(decision);
     }
 }

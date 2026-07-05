@@ -1,7 +1,7 @@
 package com.backend.backend.entity;
 
 
-import com.backend.backend.PromRequestStatus;
+import com.backend.backend.enums.PromRequestStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

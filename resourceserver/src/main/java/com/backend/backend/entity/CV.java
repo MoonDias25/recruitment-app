@@ -25,6 +25,16 @@ public class CV {
     @Column(name="uploaded_at")
     private LocalDateTime uploadedAt;
 
+    public CV() {
+    }
+
+    public CV(String userId, String fileName, String filePath,  LocalDateTime uploadedAt) {
+        this.userId = userId;
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.uploadedAt = uploadedAt;
+    }
+
     public String getId() {
         return id;
     }

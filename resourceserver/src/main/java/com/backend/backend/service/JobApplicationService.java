@@ -1,13 +1,13 @@
 package com.backend.backend.service;
 
-import com.backend.backend.ApplicationStatus;
-import com.backend.backend.Exception;
+import com.backend.backend.enums.ApplicationStatus;
 import com.backend.backend.dto.ApplicationHistoryDTO;
 import com.backend.backend.dto.UpdateJobApplicationDTO;
 import com.backend.backend.entity.CV;
 import com.backend.backend.entity.CandidateApplication;
 import com.backend.backend.entity.JobOffer;
 import com.backend.backend.entity.UserProfile;
+import com.backend.backend.handler.GlobalExceptionHandler;
 import com.backend.backend.mapper.JobApplicationMapper;
 import com.backend.backend.repository.CandidateApplicationRepository;
 import com.backend.backend.repository.CvRepository;
@@ -80,23 +80,13 @@ public class JobApplicationService {
         Path filePath = uploadPath.resolve(uniqueFileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        CV cvEntity = new CV();
-        cvEntity.setUserId(userId);
-        cvEntity.setFileName(originalFileName);
-        cvEntity.setFilePath(filePath.toString());
-        cvEntity.setUploadedAt(LocalDateTime.now());
+        CV cvEntity = new CV(userId, originalFileName, filePath.toString(), LocalDateTime.now());
         CV savedCv = cvRepository.save(cvEntity);
 
-        CandidateApplication application = new CandidateApplication();
-        application.setUserId(userId);
-        application.setJobOffer(jobOffer);
-        application.setCvId(savedCv.getId());
-        application.setAppliedAt(LocalDateTime.now());
-        application.setStatus(ApplicationStatus.PENDING);
-
         String hrManager = jobOffer.getReviewedBy();
-        application.setReviewedBy(hrManager);
 
+        CandidateApplication application = new CandidateApplication(userId, jobOffer, savedCv.getId(),
+                LocalDateTime.now(), ApplicationStatus.PENDING, hrManager);
         applicationRepository.save(application);
     }
 
@@ -130,7 +120,7 @@ public class JobApplicationService {
     public List<ApplicationHistoryDTO> getApplicationsByJobOffer(String id, Authentication authentication) {
 
         JobOffer offer = jobOfferRepository.findJobOfferById(id).
-                orElseThrow(() -> new Exception.ResourceNotFoundException("Couldn't find job offer with id: " + id));
+                orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Couldn't find job offer with id: " + id));
 
         boolean isOwner = offer.getReviewedBy().equals(authentication.getName());
         boolean isAdmin = false;
@@ -177,7 +167,7 @@ public class JobApplicationService {
     public FileDownloadModel getCvFileForApplication(String applicationId, String currentUserId, Authentication authentication) {
 
         CandidateApplication application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new Exception.ResourceNotFoundException("Application not found with id: " + applicationId));
+                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Application not found with id: " + applicationId));
 
         boolean isOwner = application.getUserId().equals(currentUserId);
         boolean isHR = false;
@@ -201,7 +191,7 @@ public class JobApplicationService {
         }
 
         CV cvEntity = cvRepository.findById(application.getCvId())
-                .orElseThrow(() -> new Exception.ResourceNotFoundException("CV not found for this application."));
+                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("CV not found for this application."));
 
         return new FileDownloadModel(cvEntity.getFileName(), cvEntity.getFilePath());
     }
@@ -209,7 +199,7 @@ public class JobApplicationService {
     private ApplicationHistoryDTO convertToAppHistoryDTO(String appId) {
 
         CandidateApplication app = applicationRepository.findById(appId)
-                .orElseThrow(() -> new Exception.ResourceNotFoundException("Couldn't find the resource with id: " + appId));
+                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Couldn't find the resource with id: " + appId));
         UserProfile applicant = userProfileRepository.findById(app.getUserId()).orElse(null);
 
         CV cv = null;
@@ -224,7 +214,7 @@ public class JobApplicationService {
     public ApplicationHistoryDTO updateApplicationReview(String appId, UpdateJobApplicationDTO request, Authentication authentication){
 
         CandidateApplication application = applicationRepository.findById(appId).orElseThrow(
-                ()-> new Exception.ResourceNotFoundException("Couldn't find application with id: " + appId));
+                ()-> new GlobalExceptionHandler.ResourceNotFoundException("Couldn't find application with id: " + appId));
         application.setStatus(request.getStatus());
         application.setRecruiterNotes(request.getRecruiterNotes());
         application.setReviewedAt(LocalDateTime.now());
@@ -238,10 +228,10 @@ public class JobApplicationService {
     public void deleteApplicationWithCv(String appId){
 
         CandidateApplication application = applicationRepository.findById(appId).orElseThrow(
-                () -> new Exception.ResourceNotFoundException("Couldn't find application with id: " + appId));
+                () -> new GlobalExceptionHandler.ResourceNotFoundException("Couldn't find application with id: " + appId));
 
         CV cv =  cvRepository.findById(application.getCvId()).orElseThrow(
-                () -> new Exception.ResourceNotFoundException("CV not found for this application."));
+                () -> new GlobalExceptionHandler.ResourceNotFoundException("CV not found for this application."));
 
         applicationRepository.delete(application);
         cvRepository.delete(cv);

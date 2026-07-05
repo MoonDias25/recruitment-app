@@ -3,6 +3,7 @@ package com.backend.backend.controller;
 import com.backend.backend.dto.ApplicationHistoryDTO;
 import com.backend.backend.dto.UpdateJobApplicationDTO;
 import com.backend.backend.entity.CandidateApplication;
+import com.backend.backend.handler.GlobalExceptionHandler;
 import com.backend.backend.repository.CvRepository;
 import com.backend.backend.response.ApiResponse;
 import com.backend.backend.service.JobApplicationService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +33,9 @@ public class JobApplicationController {
     private final JobApplicationService applicationService;
     private final CvRepository cvRepository;
 
+    private static final String WORD_DOC_VALUE = "application/msword";
+    private static final String WORD_DOCX_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
     public JobApplicationController(JobApplicationService applicationService, CvRepository cvRepository) {
         this.applicationService = applicationService;
         this.cvRepository = cvRepository;
@@ -40,52 +45,41 @@ public class JobApplicationController {
     public ResponseEntity<Map<String, String>> applyToJob(
             @RequestParam("jobOfferId") String jobOfferId,
             @RequestParam("file") MultipartFile file,
-            Authentication authentication) {
-        try {
-            String currentUserId = authentication.getName();
+            Authentication authentication) throws IOException {
 
-            String contentType = file.getContentType();
-            if (contentType == null || (!contentType.equals("application/pdf") &&
-                    !contentType.equals("application/msword") &&
-                    !contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Only PDF and Word documents are allowed!"));
-            }
+        String currentUserId = authentication.getName();
+        String contentType = file.getContentType();
 
-            applicationService.applyToJobWithFile(jobOfferId, file, currentUserId);
+        if (!MediaType.APPLICATION_PDF_VALUE.equals(contentType) &&
+                !WORD_DOC_VALUE.equals(contentType) &&
+                !WORD_DOCX_VALUE.equals(contentType)) {
 
-            return ResponseEntity.ok(Map.of("message", "Application submitted successfully with your CV!"));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("message", "An error occurred while uploading: " + e.getMessage()));
+            throw new IllegalArgumentException("Only PDF and Word documents are allowed!");
         }
+
+        applicationService.applyToJobWithFile(jobOfferId, file, currentUserId);
+
+        return ResponseEntity.ok(Map.of("message", "Application submitted successfully with your CV!"));
     }
 
     @GetMapping("/download-cv/{applicationId}")
-    public ResponseEntity<Resource> downloadCv(@PathVariable String applicationId, Authentication authentication) {
+    public ResponseEntity<Resource> downloadCv(@PathVariable String applicationId, Authentication authentication) throws MalformedURLException { // <--- Adăugat aici
 
         JobApplicationService.FileDownloadModel fileModel = applicationService.getCvFileForApplication(applicationId,
                 authentication.getName(), authentication);
 
-        try {
-            Path filePath = Paths.get(fileModel.filePath());
-            Resource resource = new UrlResource(filePath.toUri());
+        Path filePath = Paths.get(fileModel.filePath());
+        Resource resource = new UrlResource(filePath.toUri());
 
-            if (!resource.exists() || !resource.isReadable()) {
-                throw new RuntimeException("File on disk is missing or corrupted.");
-            }
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileModel.fileName() + "\"")
-                    .body(resource);
-
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error reading file path", e);
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new GlobalExceptionHandler.ResourceNotFoundException(
+                    "The requested CV file is missing from the server storage or corrupted.");
         }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileModel.fileName() + "\"")
+                .body(resource);
     }
 
     @GetMapping("/my-applications")

@@ -1,6 +1,6 @@
 package com.authserver.server.entity;
 
-import com.authserver.server.PromRequestStatus;
+import com.authserver.server.enums.PromRequestStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.authserver.server;
+package com.backend.backend.enums;
 
 public enum PromRequestStatus {
 

@@ -1,6 +1,6 @@
 package com.backend.backend.dto;
 
-import com.backend.backend.JobStatus;
+import com.backend.backend.enums.JobStatus;
 
 import java.time.LocalDateTime;
 

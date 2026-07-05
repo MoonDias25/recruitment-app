@@ -1,6 +1,6 @@
 package com.backend.backend.dto;
 
-import com.backend.backend.ApplicationStatus;
+import com.backend.backend.enums.ApplicationStatus;
 import jakarta.validation.constraints.NotNull;
 
 public class UpdateJobApplicationDTO {

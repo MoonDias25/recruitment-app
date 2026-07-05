@@ -1,4 +1,4 @@
-package com.backend.backend;
+package com.backend.backend.enums;
 
 public enum JobStatus {
     ACTIVE,

@@ -1,10 +1,10 @@
 package com.backend.backend.service;
 
-import com.backend.backend.Exception;
-import com.backend.backend.JobStatus;
+import com.backend.backend.enums.JobStatus;
 import com.backend.backend.dto.*;
 import com.backend.backend.entity.JobOffer;
 import com.backend.backend.entity.UserProfile;
+import com.backend.backend.handler.GlobalExceptionHandler;
 import com.backend.backend.mapper.JobOfferMapper;
 import com.backend.backend.repository.JobOfferRepository;
 import com.backend.backend.repository.UserProfileRepository;
@@ -23,7 +23,6 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class JobOfferService {
@@ -94,7 +93,7 @@ public class JobOfferService {
     public ShortJobOfferDTO findJobOfferById(String id) {
 
         JobOffer offer = jobOfferRepository.findById(id).orElseThrow(() ->
-                new Exception.ResourceNotFoundException("Job offer with id " + id + " not found."));
+                new GlobalExceptionHandler.ResourceNotFoundException("Job offer with id " + id + " not found."));
 
         ShortJobOfferDTO dto = new ShortJobOfferDTO();
         dto.setId(offer.getId());
@@ -115,7 +114,7 @@ public class JobOfferService {
     @Transactional
     public JobOfferRequestDTO updateOffer(String id, JobOfferRequestDTO dto, Authentication authentication){
         JobOffer offer = jobOfferRepository.findById(id)
-                .orElseThrow(() -> new Exception.ResourceNotFoundException("Couldn't find job offer with id: " + id));
+                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Couldn't find job offer with id: " + id));
 
         boolean isOwner = authentication.getName().equals(offer.getReviewedBy());
 
@@ -146,7 +145,7 @@ public class JobOfferService {
     @Transactional
     public void deleteOffer(String id, Authentication authentication){
         JobOffer offer = jobOfferRepository.findById(id)
-                .orElseThrow(() -> new Exception.ResourceNotFoundException("Job offer with id: " + id + " doesn't exist!"));
+                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Job offer with id: " + id + " doesn't exist!"));
 
         boolean isOwner = authentication.getName().equals(offer.getReviewedBy());
 

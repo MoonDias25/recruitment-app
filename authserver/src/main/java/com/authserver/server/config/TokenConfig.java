@@ -74,8 +74,8 @@ public class TokenConfig {
                                 .orElse("ROLE_USER");
                         claims.claim("role", role);
 
-                    } catch (Exception _) {
-
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
                     }
                 }
             }

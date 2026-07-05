@@ -1,4 +1,32 @@
-CREATE TABLE IF NOT EXISTS oauth2_registered_client (
+CREATE TABLE authorities (
+                             id VARCHAR(36) NOT NULL PRIMARY KEY,
+                             authority_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE users (
+                       id VARCHAR(36) NOT NULL PRIMARY KEY,
+                       first_name VARCHAR(255),
+                       last_name VARCHAR(255),
+                       email VARCHAR(255),
+                       password VARCHAR(255),
+                       active BOOLEAN NOT NULL,
+                       phone_number VARCHAR(255),
+                       birth_date DATE,
+                       creation_date DATETIME(6),
+                       authority_id VARCHAR(36),
+                       CONSTRAINT fk_users_authority FOREIGN KEY (authority_id) REFERENCES authorities(id)
+);
+
+CREATE TABLE promotion_request (
+                                   id VARCHAR(36) NOT NULL PRIMARY KEY,
+                                   user_id VARCHAR(255) NOT NULL,
+                                   hr_notes VARCHAR(1000),
+                                   admin_notes VARCHAR(1000),
+                                   status VARCHAR(50) NOT NULL,
+                                   processed_at DATETIME(6)
+);
+
+CREATE TABLE oauth2_registered_client (
                                           id varchar(100) NOT NULL PRIMARY KEY,
                                           client_id varchar(100) NOT NULL,
                                           client_id_issued_at timestamp NOT NULL,
@@ -14,7 +42,7 @@ CREATE TABLE IF NOT EXISTS oauth2_registered_client (
                                           token_settings varchar(2000) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS oauth2_authorization (
+CREATE TABLE oauth2_authorization (
                                       id varchar(100) NOT NULL PRIMARY KEY,
                                       registered_client_id varchar(100) NOT NULL,
                                       principal_name varchar(200) NOT NULL,
@@ -37,7 +65,7 @@ CREATE TABLE IF NOT EXISTS oauth2_authorization (
                                       oidc_id_token_expires_at timestamp
 );
 
-CREATE TABLE IF NOT EXISTS oauth2_authorization_consent (
+CREATE TABLE oauth2_authorization_consent (
                                               registered_client_id varchar(100) NOT NULL,
                                               principal_name varchar(200) NOT NULL,
                                               authorities varchar(1000) NOT NULL,

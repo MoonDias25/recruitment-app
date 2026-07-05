@@ -1,6 +1,6 @@
 package com.authserver.server.dto;
 
-import com.authserver.server.PromRequestStatus;
+import com.authserver.server.enums.PromRequestStatus;
 
 import java.time.LocalDateTime;
 
