@@ -16,14 +16,12 @@ public class EmailService {
     public void sendConfirmationEmail(String toEmail, String firstName) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("vlad.slobodeaniuc00@e-uvt.ro");
+        message.setFrom("test@mail.com");
         message.setTo(toEmail);
-        message.setSubject("Super Confirmation");
+        message.setSubject("Confirmation");
 
-        message.setText("Salutare, " + firstName + "!\n\n" +
-                "Ty bro. " +
-                "Contul tău a fost creat cu succes și este gata de utilizare!\n\n" +
-                "Bon samedi\nCalule");
+        message.setText("Hello, " + firstName + "!\n\n" +
+                "Your accout was created!");
 
         mailSender.send(message);
     }
